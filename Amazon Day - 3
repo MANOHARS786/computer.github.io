@@ -1,0 +1,143 @@
+8) Split a String Into the Max Number of Unique Substrings
+
+class Solution {
+    public int maxUniqueSplit(String s) {
+        
+
+   HashSet<String> h=new HashSet<String>();
+        return helper(0,"",s,h);
+    }
+    public int helper(int indx,String temp,String s,HashSet<String> h)
+    {
+     if(indx==s.length())
+     return 0;
+     else
+     {
+         temp+=s.charAt(indx);
+         int op1=Integer.MIN_VALUE;
+         int op2=Integer.MIN_VALUE;
+         if(!h.contains(temp))
+         {
+             h.add(temp);
+             op1=1+helper(indx+1,"",s,h);
+             h.remove(temp);
+
+         }
+          op2=helper(indx+1,temp,s,h);
+                                        return Math.max(op1,op2);
+
+
+     }
+
+
+    }
+}
+
+
+
+
+9) Maximum Sum of an Hourglass
+
+
+
+class Solution {
+    public int maxSum(int[][] grid) {
+
+     int max=Integer.MIN_VALUE;
+     int m=grid.length;
+     int n=grid[0].length;
+     for(int i=1;i+1<m;i++)
+     {
+         for(int j=1;j+1<n;j++)
+         {
+
+           int curr=grid[i][j]+grid[i-1][j-1]+grid[i-1][j]+grid[i-1][j+1]+grid[i+1][j]+grid[i+1][j-1]+grid[i+1][j+1];
+           max=Math.max(curr,max);
+
+         }
+     }
+     return max;
+
+
+
+
+    }
+}
+
+
+
+
+10) Maximum Subarray Min-Product
+
+
+class Solution {
+    public int maxSumMinProduct(int[] nums) {
+        int n=nums.length;
+     long psum[]=new long[n+1];//prefix sum generation
+     psum[0]=0;
+     for(int i=1 ;i<=n;i++)
+     {
+   psum[i]=psum[i-1]+nums[i-1];
+     }
+//now leftsmalllerindex 
+ int []leftSE=findimmediateleftsmaller(nums,n);
+ int []rightSE=findimmediaterightsmaller(nums,n);
+ long max=Long.MIN_VALUE;
+ for(int i=0;i<n;i++)
+ {
+     int leftse=leftSE[i];
+     int rightse=rightSE[i];
+     long sum=psum[rightse]-psum[leftse+1];
+     long minpr=nums[i]*sum;
+     max=Math.max(minpr,max);
+     
+ }
+
+return(int)(max%1000000007);
+
+    }
+    public  int []  findimmediateleftsmaller(int nums[],int n)
+    {
+        Stack<Integer> st=new Stack<Integer>();
+        int []res=new int[n];
+        for(int i=0;i<n;i++)
+        {
+            while(!st.isEmpty()&& nums[st.peek()]>=nums[i])
+            {
+                st.pop();
+            }
+            if(st.isEmpty()==true)
+            {
+                res[i]=-1;
+            }
+            else
+            {
+                res[i]=st.peek();
+            }
+            st.push(i);
+        }
+        return res;
+    }
+    public int[] findimmediaterightsmaller(int nums[],int n)
+    {
+
+
+
+
+        Stack<Integer> st=new Stack<Integer>();
+        int res[]=new int[n];
+        for(int i=n-1;i>=0;i--)
+        {
+            while(!st.isEmpty() && nums[st.peek()]>=nums[i])
+            {
+                st.pop();
+            }
+            if(st.isEmpty()==true)
+            res[i]=n;
+            else
+            res[i]=st.peek();
+            st.push(i);
+        }
+        return res;
+    }
+}
